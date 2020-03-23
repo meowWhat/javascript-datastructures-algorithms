@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    //质数是指在大于1的自然数中，除了1和它本身以外不再有其他因数的自然数。
+    function isPrimeNum01(num) { //判断传入数字是否为质数， 返回布尔值
+      //初级算法
+      if (num <= 0) return false
+
+      for (let index = 2; index < num; index++) {
+        if (num % index == 0) return false
+      }
+
+      return true
+    }
+
+    function isPrimeNum02(num) { //判断传入数字是否为质数， 返回布尔值
+      //进阶版
+      if (num <= 0) return false
+
+      let newNum = parseInt(Math.sqrt(num))
+
+      for (let index = 2; index <= newNum; index++) {
+        if (num % index == 0) return false
+      }
+
+      return true
+    }
+  </script>
+</body>
+
+</html>

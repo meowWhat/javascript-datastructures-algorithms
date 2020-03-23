@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>哈希表的实现</title>
+</head>
+
+<body>
+  <script>
+    class HashTable { //基于拉链法解决冲突 
+      constructor(limit) {
+        this.count = 0
+        this.storage = []
+        this.limit = limit
+      }
+      hashFunction(str, size) {
+        //哈希函数 实质就是拿到要解析字符串的编码 进行幂的连乘然后相加  最后取模 
+        //这样就可以大概率的把数据 均匀分布 提高效率   遇到冲突的 取模值 进行拉链法 
+        // 即 在同一个哈希地址 中开辟一个新的桶 来存放冲突的数据
+        //数据格式 类似map  [key,value] //通过key 来快速索引value
+        let hashCode = 0
+        //霍纳算法，计算hashCode 幂的连乘
+        for (let index = 0; index < str.length; index++) {
+          //charCodeAt 拿到字符的unicode编码
+          // 37 是hash函数常用的质数 也就是多项式的 x
+          hashCode = 37 * hashCode + str.charCodeAt(index)
+        }
+        //取模压缩哈希值
+        let res = hashCode % size
+        //返回res
+        return res
+
+      }
+      put(key, value) { //添加或者修改
+        //得到哈希索引
+        let index = this.hashFunction(key, this.limit)
+        //判断索引是否有桶 没有则加入
+        let bucket = this.storage[index]
+        if (!bucket) {
+          this.storage[index] = []
+          bucket = this.storage[index]
+        }
+        //有桶 进行添加 或者 修改操作
+        //元组 0位 等于 key 那么就是修改
+        for (let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          if (tuple[0] === key) return tuple[1] = value
+        }
+        //元组0位不等于key 执行添加操作
+        bucket.push([key, value])
+        this.count += 1
+        if (this.count > this.limit * 0.75) { //扩容操作
+          this.resize(this.getPrime(this.limit * 2))
+        }
+      }
+      get(key = '') { //通过key 查找
+        let index = this.hashFunction(key, this.limit) //得到哈希索引
+        let bucket = this.storage[index]
+        if (!bucket) return null //bucket为空返回null
+        for (let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          if (tuple[0] == key) return tuple[1] //找到了 返回value
+        }
+        return null //桶内没值返回null
+      }
+      remove(key) {
+        let index = this.hashFunction(key, this.limit) //得到哈希索引
+        let bucket = this.storage[index] //拿到桶
+        if (!bucket) return false
+        for (let i = 0; i < bucket.length; i++) {
+          let tuple = bucket[i]
+          if (tuple[0] == key) {
+            this.count -= 1
+            delete bucket[i]
+            if (!bucket.entries().next().value[1]) delete this.storage[index]
+            if (this.limit > 7 && this.count < this.limit * 0.25) { //缩容操作
+              this.resize(this.getPrime(Math.floor(this.limit / 2)))
+            }
+            return true
+          }
+        }
+        return false
+      }
+      size() {
+        return this.count
+      }
+      isEmpty() {
+        return !this.count > 0
+      }
+      resize(size) {
+        let oldStorage = this.storage
+        this.storage = []
+        this.count = 0
+        this.limit = size
+        for (let i = 0; i < oldStorage.length; i++) {
+          let bucket = oldStorage[i]
+          if (!bucket) continue
+          for (let j = 0; j < bucket.length; j++) {
+            let tuple = bucket[j];
+            this.put(tuple[0], tuple[1])
+          }
+        }
+      }
+      getPrime(num) {
+        while (!this.isPrime(num)) {
+          num++
+        }
+        return num
+      }
+      isPrime(num) {
+        if (num <= 0) return false
+
+        let newNum = parseInt(Math.sqrt(num))
+
+        for (let index = 2; index <= newNum; index++) {
+          if (num % index == 0) return false
+        }
+
+        return true
+      }
+    }
+  </script>
+</body>
+
+</html>

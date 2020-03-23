@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <script>
+      function hashFunc(str, size) {
+        let hashCode = 0
+        //霍纳算法，计算hashCode 幂的连乘
+        for (let index = 0; index < str.length; index++) {
+          //charCodeAt 拿到字符的unicode编码
+          // 37 是hash函数常用的质数 也就是多项式的
+          hashCode = 37 * hashCode + str.charCodeAt(index)
+        }
+        //取模压缩哈希值
+        let res = hashCode % size
+        //返回res
+        return res
+      }
+      console.log(hashFunc('abc', 7))
+      //这里会有很多问题  就是压缩后的值可能会怎么样？ 重复
+      //解决冲突两种方法 链地址法 ：拉链法 在同一个地址中 嵌套一个链表 //这样要新开辟空间，但是效率高
+      // 开放地址法   将冲突通过 线性搜索 寻找空的地址存储   //这样节省空间 但是效率低
+    </script>
+  </body>
+</html>

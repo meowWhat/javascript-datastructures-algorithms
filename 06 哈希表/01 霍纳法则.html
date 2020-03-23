@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <a href="https://blog.csdn.net/Petershusheng/article/details/51661510"></a>
+
+  <script>
+    let arr = [2, -1, -3, 1, -5]
+
+    function horner(arr, x) {
+      let res = 0
+      for (let index = 0; index < arr.length; index++) {
+        res = x * res + arr[index]
+      }
+      return res
+    }
+    console.log(horner(arr, 7));
+  </script>
+</body>
+
+</html>
